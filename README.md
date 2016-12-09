@@ -3,7 +3,7 @@ Kodskelett och instruktioner för grupptävling
 med IoT-tema hos Dewire Consultants AB.
 
 ## Uppgiften
-Uppgiften går ut på att bygga en uppkopplad enhet som med hjälp av olika sensorer kan användas som ett slags tangentbord. Med er lösning behöver ni klara av att skriva gemener [a-z], mellanrumstecken samt "Enter" för att skicka en text. Se `Tävlingssystemet` för fler detaljer.
+Uppgiften går ut på att bygga en uppkopplad enhet som med hjälp av olika sensorer kan användas som ett slags tangentbord. Med er lösning behöver ni klara av att skriva gemener [a-z], mellanrumstecken samt "Enter" för att skicka en text. Se [Tävlingssystemet](#Tävlingssystemet) för fler detaljer.
 
 ## Material
 Ni kommer att ha tillgång till följande material:
@@ -18,11 +18,18 @@ Microkontrollern kommer förinstallerad med  NodeMCU, en firmware för ESP8266, 
 Det finns inga beränsningar förutom att enheten är självständig (ej kopplad till en dator) under tävlingsmomentet.
 
 ####Länkar
-Dokumentation till NodeMCU och dess moduler:
-http://nodemcu.readthedocs.io/
 
 Här finns instruktioner för hur man flashar om enheten:
 https://nodemcu.readthedocs.io/en/master/en/flash/
+
+Dokumentation till NodeMCU och dess moduler:
+http://nodemcu.readthedocs.io/
+
+Lua: https://www.tutorialspoint.com/lua/
+
+ESPlorer: https://esp8266.ru/esplorer/
+
+Installationsguide: https://www.youtube.com/watch?v=-a2-p0GKIdw
 
 #### Kodskelettet
 Kodskelettet är utvecklat för NodeMCU v. 1.5.4.1 och kräver modulerna mqtt, wifi, net, i2c, u8g, node och timer.
@@ -53,7 +60,7 @@ local groupName = "NinjaBears";
 Efter uppstart kommer appen därefter använda modulen DewireContestConnection för att ansluta 
 till tävlingssystemet, och under tävlingen ska DCC-funktionen
 ```
-function send(string)
+dcc.send(string)
 ```
 användas för att ladda upp sin skrivna textsträng med. Detta skall göras upprepat under tiden 
 man varje gång en ny bokstav tillkommer eller tas bort, dock åtminstone när man skrivit klart, 
@@ -61,11 +68,25 @@ annars registreras inte tiden. För att förtydliga, hela din textsträng ska sk
 fel oavsett. Kalla ej på denna funktion överdrivet eller onödigt mycket, då det skapar onödig trafik
 till tävlingssystemet.
 
+För att skriva ut text på OLED-skärmen kan ni använda DCC-funktionen
+```
+dcc.printToLED(string, string)
+```
+Som tar två textsträngar. Tänk på vilken information ni vill kunna se under tävligen då ni har kopplat ifrån enheten från datorn!
+
 Kom ihåg att om send(string) används innan tävlingen startat så kan andra deltagare se hur snabbt ni skriver!
 
 Vid problem, prata med någon från Dewire.
 
+## Övrig info
 
-
-
-## Tips och Tricks för att koda ESP8266
+* På t.ex. Ubuntu kan du behöva lägga till din användare i gruppen dialout för att få rättigheter til USB-enheter:
+`sudo usermod -a -G dialout <din användare>`
+Logga sedan ut och in användaren.
+* Tävlingen kommer att genomföras på batteri. Det är ett 1-cells-lipo. Eran krets kommer alltså inte upp i de 5 volt som en del saker kräver.
+* Kretsen har endast en analog ingång. Och den jobbar i spannet 0-1V. Oftast är i2c och SPI ett bättre alternativ när det gäller sensorer.
+* Batteriet laddas när usb-kabeln är ikopplad. Se till att batteriet och kabeln är i under utvecklingen så batteriet inte är tomt vid tävlingen.
+* Logicnivån för kretsen är 3.3V. Prova inte att köra 5V. Måste en verkligen så finns det logic-level-konverters.
+* Det finns två LEDs på Feather Huzzah som går att kontrollera.
+* Undvik busy loop då det kommer göra enheten okontaktbar.
+* Ni kanske måste byta accesspunkt inför tävlingsmomentet!
