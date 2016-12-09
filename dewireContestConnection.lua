@@ -1,7 +1,7 @@
 --[[
-    dewire_contest_connection.lua
+    dewireContestConnection.lua
     
-    Connect to WiFi and Dewire's' hackathon server.
+    Connects to WiFi and the contest server.
 --]]
 local M = {}
 
