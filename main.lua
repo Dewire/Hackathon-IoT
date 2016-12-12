@@ -12,8 +12,6 @@
     
 --]]
 
-local dcc = require("dewireContestConnection")
-
 -- Change the values below to the ones given by the instructors.
 local contestServer = "xxxx.dewire.com"
 local SSID = "wifi SSID"
